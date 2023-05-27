@@ -13,23 +13,26 @@ URL=https://tz.fawlty.net/${OS}/${VER}
 ARCH=amd64
 OCTEZBASE=octez-${OS}-unoff
 
-# Network
+# Network - various options
 #
-NET=mainnet
-NETWORKURL=mainnet
+#NET=mainnet
+#NET=ghostnet
+#NET=mumbainet
+NET=nairobinet
 
-#NET=narobinet
-#NETWORKURL=https://teztnets.xyz/${NET}
-
-# Mode
-#
-MODE=rolling
-SNAPSHOT_URL=https://${NET}.xtz-shots.io/${MODE}
-
+# Mode & snapshot URL
 #MODE=full
 #SNAPSHOT_URL="https://snapshots.tezos.marigold.dev/api/${NET}/full"
 
-# Upgrade OS
+MODE=rolling
+SNAPSHOT_URL=https://${NET}.xtz-shots.io/${MODE}
+
+NETWORKURL=${NET}
+if [ "$NET" != "mainnet" ] && [ "$NET" != "ghostnet" ]; then
+    NETWORKURL=https://teztnets.xyz/${NET}
+fi
+
+# Update the package repository and upgrade the OS
 #
 apt-get update
 apt-get upgrade -y
@@ -43,7 +46,8 @@ for pkg in client node; do
     rm -f ${fullpkg}
 done
 
-# Configuration
+# Basic Configuration on the Octez node using network, history
+# local RPC service and an open gossip port
 #
 su - tezos -c "octez-node config init --data-dir /var/tezos/node \
 			--network=${NETWORKURL} \
@@ -51,32 +55,19 @@ su - tezos -c "octez-node config init --data-dir /var/tezos/node \
 			--rpc-addr='127.0.0.1:8732' \
 		            --net-addr='[::]:9732'"
 
-# Snapshot
+# Download the snapshot and import it
 #
 wget -qq ${SNAPSHOT_URL} -O /var/tezos/__snapshot
 su - tezos -c "octez-node snapshot import /var/tezos/__snapshot --data-dir /var/tezos/node"
 rm -f /var/tezos/__snapshot
 
-# Enable services
-systemctl enable octez-node
-systemctl start octez-node
-
-## Wait for bootstrap
+# Enable services for next boot
 #
-while [ 1 = 1 ]; do
-    octez-client bootstrapped
-    if [ $? != "0" ]; then
-        echo "Waiting for bootstrap..."
-        sleep 30
-    else
-        break
-    fi
+systemctl enable octez-node
 
-done
-
-
-# Shutdown and reboot to pick up all updates
+# Shutdown and reboot to pick up any new kernels
+# Octez will start on boot
 #
 echo "===> Sleeping for reboot"
-sleep 30
+sleep 15
 shutdown -r now

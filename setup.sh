@@ -9,17 +9,21 @@ PROJECTID=your-project-id
 SERVICE_ACCOUNT="youraccountdetail-compute@developer.gserviceaccount.com"
 NAME=my-tezos-node
 
-MACHINE=e2-standard-4 # 16GB of RAM
+MACHINE=e2-standard-2 # 8GB of RAM
 DEBIAN_BUILD=debian-11-bullseye-v20230509
 SIZE=200
 
 MODE=rolling
 
+# This command was given to us by using "Equivalent Command Line" on the Google
+# Web Console for Compute Engine
+#
+
 gcloud compute instances create ${NAME} \
 	--project=${PROJECTID} \
 	--zone=${ZONE} \
 	--machine-type=${MACHINE} \
-        --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
+    --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
 	--maintenance-policy=MIGRATE \
 	--provisioning-model=STANDARD \
 	--service-account=${SERVICE_ACCOUNT} \
