@@ -41,6 +41,8 @@ gcloud projects create my-tezos-project-chris --name="My first GCP Tezos node"
 gcloud config set project my-tezos-project-chris
 ```
 
+![Cloud Shell](img/CloudShellInAction.png)
+
 3. You can add the project to your billing account using ```gcloud``` as follows. At the time of writing, the billing commands are still in beta. GCP allows users to test *alpha* and *beta* versions by adding the words 'alpha' or 'beta' after ```gcloud```. If you are working on a corporate account, you may need to as your GCP administrator.
 
 You can list your billing accounts as follows:
