@@ -29,7 +29,7 @@ XXX
 
 ![Starting Cloud Shell](img/CloudShell.png)
 
-Alternatively, you can install ```gcloud``` on your machine and run the commands there. You can download it from https://cloud.google.com/sdk/docs/install. Follow the installation instructions and once installed, use ```gcloud auth login``` to connect to your GCP account.
+Alternatively, you can install ```gcloud``` on your machine and run the commands there. You can download it from https://cloud.google.com/sdk/docs/install. Follow the installation instructions and once installed, use ```gcloud init`` to setup the software for your GCP account.
 
 The documentation for ```gcloud``` can be found here: https://cloud.google.com/sdk/gcloud/reference and there is a cheat cheat here: https://cloud.google.com/sdk/docs/cheatsheet
 
