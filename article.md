@@ -31,7 +31,7 @@ XXX
 
 Alternatively, you can install ```gcloud``` on your machine and run the commands there. You can download it from https://cloud.google.com/sdk/docs/install. Follow the installation instructions and once installed, use ```gcloud auth login``` to connect to your GCP account.
 
-The documentation for ```gcloud``` can be found here: https://cloud.google.com/sdk/gcloud/reference
+The documentation for ```gcloud``` can be found here: https://cloud.google.com/sdk/gcloud/reference and there is a cheat cheat here: https://cloud.google.com/sdk/docs/cheatsheet
 
 
 2. Add a new project to GCP, then set the default so that future commands run on the project.
