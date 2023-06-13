@@ -72,4 +72,4 @@ systemctl enable octez-node
 #
 echo "===> Sleeping for reboot"
 sleep 15
-shutdown -r now
+shutdown -r +1 &
