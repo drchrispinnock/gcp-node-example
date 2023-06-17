@@ -25,37 +25,39 @@ redirect_from:
 
 # Introduction
 
-[Tezos](https://tezos.com) is a proof-of-stake blockchain. Anyone can run a Tezos node to participate in the network and contribute to the integrity and resilience of the network. Recently I needed to bring up some Tezos nodes quickly on the [Google Cloud Platform (GCP)](https://cloud.google.com/). There are many ways to install Tezos. You can use docker images, software packages or build from source. To provision the virtual machines on GCP, you can use tools like [Terraform](https://www.terraform.io/) or [Pulumi](https://www.pulumi.com). On this occasion I wanted to get some hands-on experience with the GCP command line tool, ```gcloud```. 
+[Tezos](https://tezos.com) is a proof-of-stake blockchain. Anyone can run a Tezos node to participate in the network and contribute to the integrity and resilience of the network. Recently I needed to bring up some Tezos nodes quickly on the [Google Cloud Platform (GCP)](https://cloud.google.com/). There are many ways to install Tezos on GCP. One can use docker images, software packages or build from source. To provision the virtual machines on GCP, one can use tools like [Terraform](https://www.terraform.io/) or [Pulumi](https://www.pulumi.com). On this occasion I wanted to get some hands-on experience with the GCP command line tool, ```gcloud```. 
 
 As with most cloud services, it is possible to interact with GCP on the Unix or Windows command line. ```gcloud``` enables you to interactively provision services by typing commands and by extension allows you to write scripts to provision services very quickly.
 
 GCP has the advantage that for many of its services, the web front-end offers the the equivalent ```gcloud``` command line code for provisioning tasks. This makes it incredibly easy to write provisioning scripts for small projects. 
 
-In the GCP Console, it is possible to run Google Cloud Shell and use ```gcloud``` in the browser, but ```gcloud``` also runs natively on Linux, Macs and Windows.
+In the GCP Console, there is a feature called Google Cloud Shell in which one can run ```gcloud```, but ```gcloud``` also runs natively on Linux, Macs and Windows.
 
 In this article we will install a Tezos node completely from the command line. We will use the Google Cloud Shell in the browser, but you can follow along with ```gcloud``` installed on your machine if you want. You will need a GCP billing account either with billing credits or a payment method defined.
 
 Do not forget to delete any unwanted resources that you create on GCP as you may incur unwanted charges.
 
-For more details on Tezos, please refer to the [Tezos website](https://tezos.com).
+For more details on Tezos, please refer to the [Tezos website](https://tezos.com). Please also refer to my [article on setting up a Tezos node](https://chrispinnock.com/tezos/node/).
 
 # Outline
 
-We will install a Tezos node and participate in *nairobinet*. This is a test network designed to test the Nairobi protocol which will go live on June 23rd 2023.
+We will install a Tezos node and participate in *nairobinet*. This is a test network designed to test the Nairobi protocol which will go live on June 23rd 2023. 
 
-There are three history modes for a node - *archive*, *full* and *rolling*. An archive node has all blockchain data from the first block (Genesis block) to present day. A full node has enough information to provide most information about the chain but has some information rolled up to save on space. A rolling node contains enough blocks so that the node can participate in the network. We will setup a rolling node because the disc space required is minimal.
+A node keeps the full blockchain data or a subset of it depending on the history mode. There are three history modes for a node - *archive*, *full* and *rolling*. An archive node has all the blockchain data from the first block (Genesis block) to present day. A full node is able to  to provide most information about the chain but has some information summarised to save on space. A rolling node contains enough blocks so that the node can participate in the network. We will setup a rolling node because the disc space required is minimal.
 
-We will use the GCP Compute Engine to bring up a virtual machine with Debian 11 Linux. We will install [Octez](https://tezos.gitlab.io), the reference implementation of the Tezos protocol and we will install it using [binary packages](https://pkgbeta.tzinit.org) supplied by Tezos Foundation.
+We will use the GCP Compute Engine to bring up a virtual machine with Debian 11 Linux. We will install [Octez](https://tezos.gitlab.io), the reference implementation of the Tezos protocol and we will install it using [binary packages](https://pkgbeta.tzinit.org) supplied by the Tezos Foundation.
 
-The resources for this article can be found in [GitHub](https://github.com/drchrispinnock/gcp-node-example).
+Alternatively, you could choose to participate in the production Tezos network *mainnet* but it will take longer to download and import the snapshot. 
+
+The resources for this article can be found at [GitHub](https://github.com/drchrispinnock/gcp-node-example).
 
 # Installation
 
-1\. Login to the [Google Cloud Platform Console](https://console.cloud.google.com/) with your Google account. If this is your first login, you will need to activate the account and set it up a billing method[^2].
+1\. Login to the [Google Cloud Platform Console](https://console.cloud.google.com/) with your Google account. If this is your first login, you will need to activate the account and set up a billing method[^2].
 
 [^2]: You may be eligible for credits if you are new user.
 
-2\. Start the Cloud Shell. The Cloud Shell runs in a web browser. You can start it by clicking the Cloud Shell button at the top right of the console.
+2\. Start the Cloud Shell. The Cloud Shell runs in a web browser. You can start it by clicking the Cloud Shell button at the top right of the console, here highlighted in green:
 
 ![Starting Cloud Shell](img/CloudShell.png)
 
@@ -125,7 +127,7 @@ DISABLED: False
 
 Notice how the service account address is constructed from the short account name and the project name.
 
-7\. Bring up a virtual machine (VM). We are going to use *europe-west6-a* (Zürich), but you can choose any zone you want. We will use the *e2-standard-2* instance. It has 8GB of RAM and it is sufficient to run a node. We will be using Debian Linux v11 . Also note that we will 80GB of disc. This is fine for a rolling node. 
+7\. Bring up a virtual machine (VM). We are going to use the zone *europe-west6-a* in Zürich, but you can choose any zone you want. We will use the *e2-standard-2* instance. It has 8GB of RAM and it is sufficient to run a node. We will be using Debian Linux v11 . Also note that we will use 80GB of disc. This is fine for a rolling node. 
 
 Make sure that you substitute the service account, project ID, zone and instance name with your desired ones below. Note that the project name and instance name are in the create-disk declaration, as is the Debian 11 image name. This declaration is a long and needs care when cutting and pasting.
 
@@ -155,17 +157,19 @@ One can get the relevant command line by provisioning a VM on the Google Cloud C
 
 8\. We have written a post installation script *postinstall.sh* to do the rest. The script is available for [download from GitHub](https://github.com/drchrispinnock/gcp-node-example/blob/main/postinstall.sh) (you can find the download link next to the Raw button).
 
-The ```gcloud compute instances create``` commands allows you to specify metadata to help provision the machine. One of these items can be a script to run after the VM has booted the first time. The GCP system expects a virtual machine to have completed provisioning within approximately 10 minutes and if this does not happen successfully,, the script XXX (or VM XXX) will be terminated by GCP.
+The ```gcloud compute instances create``` commands allows you to specify metadata to help provision the machine. One of these items can be a script to run after the VM has booted the first time. The GCP system can sometimes thing that a virtual machine has not initiated correctly if a script runs for too long. When working on a similar project to this, I ran into trouble when the startup script took longer than 15 minutes and [others have had the same trouble too](https://stackoverflow.com/questions/38211164/is-there-a-time-limit-for-the-startup-script-to-finish-before-it-stops).
 
-The Tezos blockchain currently creates four blocks a minute. By contrast, the Bitcoin blockchain create around four blocks an hour. At the time of writing, it is possible to start a Bitcoin node from cold and catch-up to the present day in about 2 weeks. Although a similar exercise is possible with Tezos, on mainnet it would take significantly longer given the number of blocks.
+The Tezos blockchain currently creates four blocks a minute[^3]. By contrast, the Bitcoin blockchain creates around four blocks an hour. At the time of writing, it is possible to start a Bitcoin node from cold and catch up to the present day in about 2 weeks. Although it is possible with Tezos on mainnet, it would take significantly longer given the number of blocks.
 
-Fortunately Octez has the ability to export and import snapshots of the blockchain. Our post installation script downloads a recent snapshot of the blockchain and recovers the node from it. This can take in excess of 10 minutes particularly when recovering from a mainnet snapshot. As a result, we will run the post installation script via SSH.
+[^3:] Since the Mumbainet protocol. Previously, the chain had a longer block generation time.
 
-First upload the post installation script to the Cloud Shell and then copy it to the VM. If you are running ```gcloud``` on your machine, you can just copy the file to the VM with ```scp```.
+Fortunately Octez has the ability to export and import snapshots of the blockchain. Our post installation script downloads a recent snapshot of the blockchain and recovers the blockchain state from it. This can take in excess of 10 minutes particularly when recovering from a mainnet snapshot. As a result, we will run the post installation script via SSH.
+
+First upload the post installation script to the Cloud Shell and then copy it to the VM. If you are running ```gcloud``` on your machine, you can just copy the file directly to the VM.
 
 ![Upload a file](img/UploadFile.png)
 
-The ```gcloud``` command provides a convenient wrapper to ```ssh``` and ```scp``` e can copy the file to the VM using secure shell and then run it in the same way as follows:
+The ```gcloud``` command provides a convenient wrapper to ```ssh``` and ```scp```. We can copy the file to the VM using secure shell and then run it in the same way as follows:
 
 ```
 gcloud compute scp --zone=europe-west6-a postinstall.sh my-tezos-node:/tmp
@@ -189,7 +193,7 @@ Do you want to continue (Y/n)?
 
 9\. You can see the progress as the script runs, but let's examine what *postinstall.sh* is doing.
 
-The first piece of code is just preamble, setting up various variables and settings. We will be joining the *nairobinet* test network, with a *rolling* node and by the end of this segment, the network URL will be set to *https://teztnets.xyz/nairobinet* and the snapshot URL will be set to *https://snapshots.eu.tzinit.org/nairobinet/rolling*.
+The first piece of code is just preamble, setting up variables and settings. We will be joining the *nairobinet* test network, with a *rolling* node and by the end of this segment, the network URL will be set to *https://teztnets.xyz/nairobinet* and the snapshot URL will be set to *https://snapshots.eu.tzinit.org/nairobinet/rolling*.
 
 Of course, if you want to run a node on a different network you can change the script before using it.
 
@@ -233,7 +237,7 @@ if [ "$NET" != "mainnet" ] && [ "$NET" != "ghostnet" ]; then
 fi
 ```
 
-First we update the operating system using the standard Debian packaging tools.
+First the script updates the operating system using the standard Debian packaging tools.
 
 ```
 # Update the package repository and upgrade the OS
@@ -242,7 +246,7 @@ apt-get update
 apt-get upgrade -y
 ```
 
-Then we fetch and download packages for Octez. The script is setup to download them from https://pkgbeta.tzinit.org/.
+Then it fetches and downloads packages for Octez. The script is setup to download them from https://pkgbeta.tzinit.org/.
 
 ```
 # Get and install packages
@@ -255,9 +259,11 @@ for pkg in client node; do
 done
 ```
 
-Once the packages have downloaded, we setup a basic configuration for Octez using the network URL and the history mode. The network URL is a resource that provides information about the network including servers to obtain initial blocks from. 
+Once the packages have downloaded, the script sets up a basic configuration for Octez using the network URL and the history mode. The network URL is a resource that provides information about the network including servers to obtain initial blocks from. 
 
-We allow local remote procedure calls (RPC) on port 8732. This allows us to query the node locally. We also listen publicly on port 9732. This allows other nodes to connect to ours. This activity happens on the so-called Tezos Gossip network.
+We allow local remote procedure calls (RPC) on port 8732. This allows us to query the node locally. We also listen publicly on port 9732. This will allow other nodes to connect to ours (but please see the Exercises below). This connections and activity happen on the so-called Tezos Gossip network.
+
+The packages we have used run the Octez software under a dedicated user called *tezos*. Therefore we must set up the node by running the commands under the *tezos* user. We do this with ```su```.
 
 ```
 # Basic Configuration on the Octez node using network, history
@@ -280,7 +286,7 @@ su - tezos -c "octez-node snapshot import /var/tezos/__snapshot --data-dir /var/
 rm -f /var/tezos/__snapshot
 ```
 
-The script then enables the Octez node service and reboots the server. When the system has rebooted, it will start Octez and synchronise with the network.
+The script then enables the Octez node service and reboots the server. When the system has rebooted, it will start Octez and synchronise with the network, obtaining any missing blocks.
 
 ```
 # Enable services for next boot
@@ -294,7 +300,7 @@ echo "===> Reboot in 1 minute"
 shutdown -r +1
 ```
 
-10\. When the system has rebooted, log in and check that everything is working. The packages we have used run the Octez software under a dedicated user called *tezos*. Below we switch to the user and check the status with ```octez-client bootstrapped```. This command will only work if the RPC was set up as above. It runs and prints status until the node considers itself bootstrapped and ready. Additionally you can look at the log file: ```/var/log/tezos/node.log```. 
+10\. When the system has rebooted, log in and check that everything is working.  Below we switch to the *tezos* user and check the status with ```octez-client bootstrapped```. This command will only work if the RPC was set up as above. It runs and prints status until the node considers itself bootstrapped and ready. Additionally you can look at the log file: ```/var/log/tezos/node.log```. 
 
 
 ```
@@ -330,11 +336,11 @@ Node is bootstrapped.
 
 # Conclusion
 
-Although this article is about Tezos nodes, it was really written as an excuse for me to play with ```gcloud```. As you can see from the above, it is easy to quickly provision VMs with software on GCP using ```gcloud``` and with a bit of Unix knowledge. Although I'm relatively new to GCP, I have been able to tackle far larger projects using ```gcloud``` in a relatively short space of time.
+Although this article is about Tezos nodes, it was really written as an excuse for me to play with ```gcloud```. As we have seen, it is easy to quickly provision VMs with software on GCP using ```gcloud``` and with a bit of Unix knowledge. Although I'm relatively new to GCP, I have been able to tackle far larger projects using ```gcloud``` in a relatively short space of time.
 
-Not all activities are available via ```gcloud``` yet - for example, setting up the Filestore product is still not available, but it is usually possible to write programmes to talk directly to the GCP API (which is effectively what ```gcloud``` is doing for you). As GCP matures, I expect to see more services available via the command line.
+Not all activities are available via ```gcloud``` yet - for example, setting up the Filestore product is still not available, but it is usually possible to write programmes to talk directly to the GCP API (which is effectively what ```gcloud``` is doing for you). As GCP matures, I expect to see more services available via the ```gcloud```.
 
-Of course, in bigger projects one should use an Infrastructure as Code tool such as Terraform or Pulumi. 
+Of course, for bigger projects one should use an Infrastructure as Code tool such as Terraform or Pulumi.
 
 We conclude with some exercises.
 
