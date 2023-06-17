@@ -27,26 +27,30 @@ For more details on Tezos, please refer to the [Tezos website](https://tezos.com
 
 # Outline
 
-We will install a Tezos node and participate in *nairobinet*. This is a test network designed to test the Nairobi protocol which will go live on June 23rd 2023. 
+We will install a Tezos node and participate in *nairobinet*. This is a test network designed to test the Nairobi protocol which will go live on June 23rd 2023.
 
 There are three history modes for a node - *archive*, *full* and *rolling*. An archive node has all blockchain data from the first block (Genesis block) to present day. A full node has enough information to provide most information about the chain but has some information rolled up to save on space. A rolling node contains enough blocks so that the node can participate in the network. We will setup a rolling node because the disc space required is minimal.
 
 We will use the GCP Compute Engine to bring up a virtual machine with Debian 11 Linux. We will install [Octez](https://tezos.gitlab.io), the reference implementation of the Tezos protocol and we will install it using [binary packages](https://pkgbeta.tzinit.org) supplied by Tezos Foundation.
 
+The resources for this article can be found in [Github](https://github.com/drchrispinnock/gcp-node-example).
+
 # Installation
 
-1. Login to the [Google Cloud Platform GUI](https://console.cloud.google.com/) with your Google account. If this is your first login, you may need to activate the account and set it up. You may also be eligible for credits.
+1. Login to the [Google Cloud Platform Console](https://console.cloud.google.com/) with your Google account. If this is your first login, you will need to activate the account and set it up a billing method[^2].
+
+[^2]: You may be eligible for credits if you are new user.
 
 2. Start the Cloud Shell. The Cloud Shell runs in a web browser. You can start it by clicking the Cloud Shell button at the top right of the console.
 
 ![Starting Cloud Shell](img/CloudShell.png)
 
-Alternatively, you can install ```gcloud``` on your machine and run the commands there. You can download it from https://cloud.google.com/sdk/docs/install. Follow the installation instructions and once installed, use ```gcloud init`` to setup the software for your GCP account.
+Alternatively, you can install ```gcloud``` on your machine and work from there. You can download it from [Google](https://cloud.google.com/sdk/docs/install). Follow the installation instructions[^1] and once installed, use ```gcloud init`` to setup the software for your GCP account.
 
-The documentation for ```gcloud``` can be found here: [https://cloud.google.com/sdk/gcloud/reference](https://cloud.google.com/sdk/gcloud/reference) and there is a cheat sheet here: https://cloud.google.com/sdk/docs/cheatsheet
+[^1]:  ```gcloud``` [documentation](https://cloud.google.com/sdk/gcloud/reference) and [cheat sheet](https://cloud.google.com/sdk/docs/cheatsheet)
 
 
-2. Add a new project to GCP, then set the default so that future commands run on the project.
+3. By running commands in the Cloud Shell, add a new project to GCP, then set the default so that future commands run on the project.
 
 ```
 gcloud projects create my-tezos-project-chris --name="My first GCP Tezos node"
