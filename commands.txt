@@ -1,0 +1,54 @@
+# These are the commands as found in the article
+
+gcloud projects create my-tezos-project-chris \
+	--name="My first GCP Tezos node"
+
+gcloud config set project my-tezos-project-chris
+
+gcloud beta billing accounts list
+
+gcloud beta billing projects link my-tezos-project-chris \
+    --billing-account DEADBE-EDEAD-BEEF12
+
+gcloud services enable compute.googleapis.com 
+
+gcloud iam service-accounts list
+
+(or
+gcloud iam service-accounts create tezosaccount \
+        --display-name="Tezos Service Account"
+gcloud iam service-accounts list
+)
+
+
+ZONE=europe-west6-a
+PROJECT=my-tezos-project-chris
+NAME=my-tezos-node
+SERVICEACCT=123456789123-compute@developer.gserviceaccount.com
+
+gcloud compute instances create ${NAME} \
+	--zone=${ZONE} \
+	--machine-type=e2-standard-2 \
+	--create-disk=auto-delete=yes,boot=yes,device-name=${NAME},\
+image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,\
+mode=rw,size=80,\
+type=projects/${PROJECT}/zones/${ZONE}/diskTypes/pd-balanced \
+	--network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
+	--maintenance-policy=MIGRATE \
+	--provisioning-model=STANDARD \
+	--scopes=https://www.googleapis.com/auth/cloud-platform \
+	--no-shielded-secure-boot \
+	--shielded-vtpm \
+	--shielded-integrity-monitoring \
+	--labels=goog-ec-src=vm_add-gcloud \
+	--reservation-affinity=any \
+	--service-account=${SERVICEACCT}
+
+gcloud compute scp --zone=europe-west6-a postinstall.sh my-tezos-node:/tmp
+gcloud compute ssh --zone=europe-west6-a my-tezos-node \
+         --command "nohup sudo sh /tmp/postinstall.sh"
+
+
+On the VM
+sudo su - tezos
+octez-client bootstrapped

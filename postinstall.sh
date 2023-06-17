@@ -6,8 +6,8 @@
 # No warranty whatsoever.
 
 OS=deb11
-VER=17.0
-V=17.0-1
+VER=17.1
+V=17.1-1
 
 URL=https://tz.fawlty.net/${OS}/${VER}
 ARCH=amd64
@@ -26,7 +26,8 @@ NET=nairobinet
 #SNAPSHOT_URL=https://${NET}.xtz-shots.io/${MODE}
 
 MODE=rolling
-SNAPSHOT_URL=gs://tf-snapshot-eu/${NET}/${MODE}
+SNAPSHOT_URL=https://snapshots.eu.tzinit.org/${NET}/${MODE}
+
 
 NETWORKURL=${NET}
 if [ "$NET" != "mainnet" ] && [ "$NET" != "ghostnet" ]; then
@@ -58,8 +59,7 @@ su - tezos -c "octez-node config init --data-dir /var/tezos/node \
 
 # Download the snapshot and import it
 #
-gcloud storage cp ${SNAPSHOT_URL} /var/tezos/__snapshot
-#wget -qq ${SNAPSHOT_URL} -O /var/tezos/__snapshot
+wget -qq ${SNAPSHOT_URL} -O /var/tezos/__snapshot
 su - tezos -c "octez-node snapshot import /var/tezos/__snapshot --data-dir /var/tezos/node"
 rm -f /var/tezos/__snapshot
 
