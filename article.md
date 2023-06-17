@@ -284,3 +284,29 @@ Node is bootstrapped.
 # After
 
 XXX Delete instanced
+
+# Exercises
+
+1. Find our how to create a project in GCP using ```gcloud```.
+
+2. Write a shell script that:
+
+- creates a new GCP project
+- adds it to a billing account (optional)
+- enables the GCP Compute Engine
+- creates a service account
+- provisions a VM using the service account
+- copies the postinstall script to the VM and then runs it
+
+Hint:
+- If your project is called *tezos-project* and you create a service account with short name *serviceacct*, the service account will be *serviceacct@tezos-project.iam.gserviceaccount.com*
+- You will need to consider the project name and service account name in the ```gcloud``` command - use variables.
+
+3. Modify the postinstall script so that the Tezos node runs on mainnet
+
+4. Modify your script from 2 to setup 3 nodes - one in USA, one in Europe and one in Japan.
+
+Hints:
+- Pick three zones from the GCP list
+- Use a for loop to iterate through the zones
+- Modify the instance name, zone and disk clause in the glcoud command by using the loop variable
