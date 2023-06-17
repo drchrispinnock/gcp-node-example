@@ -11,15 +11,27 @@ listings-disable-line-numbers: true
 
 # Introduction
 
-[Tezos](https://tezos.com) is a proof-of-stake blockchain and anyone can run a node on it to participate in the network. Recently I have been working on the [Google Cloud Platform (GCP)](https://cloud.google.com/). I needed to bring up some Tezos nodes quickly. There are many ways to do this. You can use docker images, Google Compute images, software packages or a scripted installation. You can also use tools like [Terraform](https://www.terraform.io/) to bring up infrastructure, but on this occasion I wanted to get some hands-on experience with the command line ```gcloud``` tool. 
+[Tezos](https://tezos.com) is a proof-of-stake blockchain. Anyone can run a Tezos node to participate in the network and contribute to the integrity and resilience of the network. Recently I needed to bring up some Tezos nodes quickly on the [Google Cloud Platform (GCP)](https://cloud.google.com/). There are many ways to install Tezos. You can use docker images, software packages or build from source. To provision the virtual machines on GCP, you can use tools like [Terraform](https://www.terraform.io/) or [Pulumi](https://www.pulumi.com). On this occasion I wanted to get some hands-on experience with the GCP command line tool, ```gcloud```. 
 
-One of the things that I like about GCP is that it is possible to interact with it on the command line. Many screens in the online console offer the ability to output the equivalent command line code at the push of a button. This makes it incredibly easy to write provisioning scripts for small projects. ```gcloud``` runs natively on Linux, Macs and Windows, and allows you to interactively provision services by typing commands and by extension allows you to write scripts to provision services very quickly.
+As with most cloud services, it is possible to interact with GCP on the Unix or Windows command line. ```gcloud``` enables you to interactively provision services by typing commands and by extension allows you to write scripts to provision services very quickly.
 
-In this article we will install a Tezos node completely from the command line. We will use the Google Cloud shell in the browser, but you can follow along with ```gcloud``` installed on your machine if you want. You will need a GCP billing account either with billing credits or a payment method defined.
+GCP has the advantage that for many of its services, the web frontend offers the the equivalent ```gcloud``` command line code for provisioning tasks. This makes it incredibly easy to write provisioning scripts for small projects. 
+
+In the GCP Console, it is possible to run Google Cloud Shell and use ```gcloud``` in the browser, but ```gcloud``` also runs natively on Linux, Macs and Windows.
+
+In this article we will install a Tezos node completely from the command line. We will use the Google Cloud Shell in the browser, but you can follow along with ```gcloud``` installed on your machine if you want. You will need a GCP billing account either with billing credits or a payment method defined.
+
+Do not forget to delete any unwanted resources that you create on GCP as you may incur unwanted charges.
+
+For more details on Tezos, please refer to the [Tezos website](https://tezos.com).
 
 # Outline
 
-XXX
+We will install a Tezos node and participate in *nairobinet*. This is a test network designed to test the Nairobi protocol which will go live on June 23rd 2023. 
+
+There are three history modes for a node - *archive*, *full* and *rolling*. An archive node has all blockchain data from the first block (Genesis block) to present day. A full node has enough information to provide most information about the chain but has some information rolled up to save on space. A rolling node contains enough blocks so that the node can participate in the network. We will setup a rolling node because the disc space required is minimal.
+
+We will use the GCP Compute Engine to bring up a virtual machine with Debian 11 Linux. We will install [Octez](https://tezos.gitlab.io), the reference implementation of the Tezos protocol and we will install it using [binary packages](https://pkgbeta.tzinit.org) supplied by Tezos Foundation.
 
 # Installation
 
@@ -31,7 +43,7 @@ XXX
 
 Alternatively, you can install ```gcloud``` on your machine and run the commands there. You can download it from https://cloud.google.com/sdk/docs/install. Follow the installation instructions and once installed, use ```gcloud init`` to setup the software for your GCP account.
 
-The documentation for ```gcloud``` can be found here: https://cloud.google.com/sdk/gcloud/reference and there is a cheat cheat here: https://cloud.google.com/sdk/docs/cheatsheet
+The documentation for ```gcloud``` can be found here: [https://cloud.google.com/sdk/gcloud/reference](https://cloud.google.com/sdk/gcloud/reference) and there is a cheat sheet here: https://cloud.google.com/sdk/docs/cheatsheet
 
 
 2. Add a new project to GCP, then set the default so that future commands run on the project.
