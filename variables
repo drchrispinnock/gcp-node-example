@@ -1,0 +1,3 @@
+nairobinet   {{ site.nexttestnet }}
+June 23rd    {{ site.nexttestnet_golive }}
+17.1	     {{ site.octez_version }}
