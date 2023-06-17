@@ -1,12 +1,26 @@
 ---
 title: "Setting up a Tezos node on GCP"
-author: "Chris Pinnock"
-date: "28 May 2023"
+date: 2022-11-26
 titlepage: false
 toc-own-page: true
 colorlinks: true
 listings: true
 listings-disable-line-numbers: true
+layout: post
+type: post
+parent_id: '0'
+published: true
+exclude: false
+password: ''
+status: publish
+categories:
+- Tezos
+tags:
+- Tezos
+meta:
+permalink: "/tezos/gcpnode/"
+redirect_from:
+- /2023/06/24/tezosgcpnode/
 ---
 
 # Introduction
