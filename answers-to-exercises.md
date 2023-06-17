@@ -2,24 +2,15 @@
 
 Resources can be found at [https://github.com/drchrispinnock/gcp-node-example](https://github.com/drchrispinnock/gcp-node-example).
 
-1. Find out how to create a project in GCP using ```gcloud```.
+1. Find out how to stop a VM in GCP using ```gcloud```.
 
 For this refer to the ```gcloud``` documentation:
 - [Gcloud dev guide](https://cloud.google.com/sdk/gcloud/reference)
 - [Gcloud cheat sheet](https://cloud.google.com/sdk/docs/cheatsheet)
 
-
-Create a project as follows:
-
+For instance *my-instance* in zone europe-west6-a use the following command:
 ```
-gcloud projects create "my-own-gcp-project"
-```
-
-This can be added to a billing account as follows:
-
-```
-gcloud beta billing projects link "my-own-gcp-project" \
-        --billing-account DEADBE-EDEAD-BEEF12
+gcloud compute instances stop my-instance --zone=europe-west6-a
 ```
 
 2. Write a shell script that:
@@ -40,3 +31,13 @@ Change ```NET=nairobinet``` to ```NET=mainnet``` in *postinstall.sh*.
 4. Modify your script from 2 to setup 3 nodes - one in USA, one in Europe and one in Japan.
 
 See *exercise4.sh*.
+
+5. Although we set up our original server to allow connections on 9732 for the Tezos Gossip network, the GCP firewall will prevent the connections. How do you add a rule to allow it?
+
+This is another question where you need to read the document but it will be harder for a beginner. Here is the command:
+
+```
+gcloud compute --project=your-project-id firewall-rules create \
+        tezos-gossip-port --direction=INGRESS --priority=1000 \
+        --network=default --action=ALLOW --rules=tcp:9732 \
+        --source-ranges=0.0.0.0/0

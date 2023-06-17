@@ -59,11 +59,11 @@ The resources for this article can be found in [GitHub](https://github.com/drchr
 
 ![Starting Cloud Shell](img/CloudShell.png)
 
-Alternatively, you can install ```gcloud``` on your machine and work from there. You can download it from [Google](https://cloud.google.com/sdk/docs/install). Follow the installation instructions[^1] and once installed, use ```gcloud init`` to setup the software for your GCP account.
+Alternatively, you can install ```gcloud``` on your machine and work from there. You can download it from [Google](https://cloud.google.com/sdk/docs/install). Follow the installation instructions[^1] and once installed, use ```gcloud init``` to setup the software for your GCP account.
 
 [^1]:  ```gcloud``` [documentation](https://cloud.google.com/sdk/gcloud/reference) and [cheat sheet](https://cloud.google.com/sdk/docs/cheatsheet)
 
-3\. By running commands in the Cloud Shell, add a new project to GCP, then set it as the default so that future commands run on the project. In the examples below we split lines with \, but you will need to be careful cutting and pasting directly from this document. To make life easier, we have supplied the commands in a [text file](https://github.com/drchrispinnock/gcp-node-example/blob/main/commands.txt).
+3\. By running commands in the Cloud Shell, add a new project to GCP, then set it as the default so that future commands run on the project. In the examples below we split lines with \\, but you will need to be careful cutting and pasting directly from this document. To make life easier, we have supplied the commands in a [text file](https://github.com/drchrispinnock/gcp-node-example/blob/main/commands.txt).
 
 ```
 gcloud projects create my-tezos-project-chris \
@@ -340,7 +340,7 @@ We conclude with some exercises.
 
 # Exercises
 
-1. Find out how to create a project in GCP using ```gcloud```.
+1. Find out how to stop a VM in GCP using ```gcloud```.
 
 2. Write a shell script that:
 
@@ -358,6 +358,8 @@ Hint:
 3. Modify the postinstall script so that the Tezos node runs on mainnet
 
 4. Modify your script from 2 to setup 3 nodes - one in USA, one in Europe and one in Japan.
+
+5. Although we set up our original server to allow connections on 9732 for the Tezos Gossip network, the GCP firewall will prevent the connections. How do you add a rule to allow it?
 
 Hints:
 - Pick three zones from the GCP list
