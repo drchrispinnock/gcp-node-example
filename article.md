@@ -129,17 +129,16 @@ Notice how the service account address is constructed from the short account nam
 
 7\. Bring up a virtual machine (VM). We are going to use the zone *europe-west6-a* in Zürich, but you can choose any zone you want. We will use the *e2-standard-2* instance. It has 8GB of RAM and it is sufficient to run a node. We will be using Debian Linux v11 . Also note that we will use 80GB of disc. This is fine for a rolling node. 
 
-Make sure that you substitute the service account, project ID, zone and instance name with your desired ones below. Note that the project name and instance name are in the create-disk declaration, as is the Debian 11 image name. This declaration is a long and needs care when cutting and pasting.
+Make sure that you substitute the service account, project ID, zone and instance name with your desired ones below. Note that the project name and instance name are in the create-disk declaration, as is the Debian 11 image name. This declaration is a long and needs care when cutting and pasting. (In the [commands helper](https://github.com/drchrispinnock/gcp-node-example/blob/main/commands.txt) we have simplified this for you.)
 
 ```
 gcloud compute instances create my-tezos-node \
 	--zone=europe-west6-a \
 	--machine-type=e2-standard-2 \
-	--service-account=123456789123-compute@developer.gserviceaccount.com \
 	--create-disk=auto-delete=yes,boot=yes,device-name=my-tezos-node,\
-	image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,\
-	mode=rw,size=80,\
-	type=projects/my-tezos-project-chris/zones/europe-west6-a/diskTypes/pd-balanced \
+image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,\
+mode=rw,size=80,\
+type=projects/my-tezos-project-chris/zones/europe-west6-a/diskTypes/pd-balanced \
 	--network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
 	--maintenance-policy=MIGRATE \
 	--provisioning-model=STANDARD \
@@ -148,7 +147,8 @@ gcloud compute instances create my-tezos-node \
 	--shielded-vtpm \
 	--shielded-integrity-monitoring \
 	--labels=goog-ec-src=vm_add-gcloud \
-	--reservation-affinity=any
+	--reservation-affinity=any \
+	--service-account=123456789123-compute@developer.gserviceaccount.com 
 ```
 
 One can get the relevant command line by provisioning a VM on the Google Cloud Console and instead of creating it, viewing the equivalent code as in the image below.
