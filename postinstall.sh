@@ -6,8 +6,8 @@
 # No warranty whatsoever.
 
 OS=deb11
-VER=17.0-rc1
-V=17.0rc1-1
+VER=17.1
+V=17.1-1
 
 URL=https://tz.fawlty.net/${OS}/${VER}
 ARCH=amd64
@@ -22,10 +22,14 @@ NET=nairobinet
 
 # Mode & snapshot URL
 #MODE=full
-#SNAPSHOT_URL="https://snapshots.tezos.marigold.dev/api/${NET}/full"
-
 MODE=rolling
-SNAPSHOT_URL=https://${NET}.xtz-shots.io/${MODE}
+
+SNAPSHOT_URL=https://snapshots.eu.tzinit.org/${NET}/${MODE}
+
+# Other services include Marigold
+#SNAPSHOT_URL="https://snapshots.tezos.marigold.dev/api/${NET}/${MODE}
+# and Xtz-shots - only rolling available
+#SNAPSHOT_URL=https://${NET}.xtz-shots.io/${MODE}
 
 NETWORKURL=${NET}
 if [ "$NET" != "mainnet" ] && [ "$NET" != "ghostnet" ]; then
@@ -68,6 +72,5 @@ systemctl enable octez-node
 # Shutdown and reboot to pick up any new kernels
 # Octez will start on boot
 #
-echo "===> Sleeping for reboot"
-sleep 15
-shutdown -r now
+echo "===> Reboot in 1 minute"
+shutdown -r +1

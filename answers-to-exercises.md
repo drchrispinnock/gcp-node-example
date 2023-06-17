@@ -2,7 +2,7 @@
 
 Resources can be found at [https://github.com/drchrispinnock/gcp-node-example](https://github.com/drchrispinnock/gcp-node-example).
 
-1. Find our how to create a project in GCP using ```gcloud```.
+1. Find out how to create a project in GCP using ```gcloud```.
 
 For this refer to the ```gcloud``` documentation:
 - [Gcloud dev guide](https://cloud.google.com/sdk/gcloud/reference)
