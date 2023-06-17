@@ -1,8 +1,15 @@
 # Answers to the exercises
 
+Resources can be found at [https://github.com/drchrispinnock/gcp-node-example](https://github.com/drchrispinnock/gcp-node-example).
+
 1. Find our how to create a project in GCP using ```gcloud```.
 
-You can find this out from the gcloud dev guide. XXX
+For this refer to the ```gcloud``` documentation:
+- [Gcloud dev guide](https://cloud.google.com/sdk/gcloud/reference)
+- [Gcloud cheat sheet](https://cloud.google.com/sdk/docs/cheatsheet)
+
+
+Create a project as follows:
 
 ```
 gcloud projects create "my-own-gcp-project"
