@@ -44,8 +44,8 @@ type=projects/${PROJECT}/zones/${ZONE}/diskTypes/pd-balanced \
 	--reservation-affinity=any \
 	--service-account=${SERVICEACCT}
 
-gcloud compute scp --zone=europe-west6-a postinstall.sh my-tezos-node:/tmp
-gcloud compute ssh --zone=europe-west6-a my-tezos-node \
+gcloud compute scp --zone=${ZONE} postinstall.sh ${NAME}:/tmp
+gcloud compute ssh --zone=${ZONE} ${NAME} \
          --command "nohup sudo sh /tmp/postinstall.sh"
 
 
