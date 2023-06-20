@@ -129,16 +129,21 @@ Notice how the service account address is constructed from the short account nam
 
 7\. Bring up a virtual machine (VM). We are going to use the zone *europe-west6-a* in Zürich, but you can choose any zone you want. We will use the *e2-standard-2* instance. It has 8GB of RAM and it is sufficient to run a node. We will be using Debian Linux v11 . Also note that we will use 80GB of disc. This is fine for a rolling node. 
 
-Make sure that you substitute the service account, project ID, zone and instance name with your desired ones below. Note that the project name and instance name are in the create-disk declaration, as is the Debian 11 image name. This declaration is a long and needs care when cutting and pasting. (In the [commands helper](https://github.com/drchrispinnock/gcp-node-example/blob/main/commands.txt) we have simplified this for you.)
+Make sure that you substitute the service account, project ID, zone and instance name with your desired ones below. This declaration is a long and needs care when cutting and pasting. We've used some variables to simplify it. (Remember to check the [commands helper](https://github.com/drchrispinnock/gcp-node-example/blob/main/commands.txt) file if you are having trouble copying and pasting.)
 
 ```
-gcloud compute instances create my-tezos-node \
-	--zone=europe-west6-a \
+ZONE=europe-west6-a
+PROJECT=my-tezos-project-chris
+NAME=my-tezos-node
+SERVICEACCT=123456789123-compute@developer.gserviceaccount.com
+
+gcloud compute instances create ${NAME} \
+	--zone=${ZONE} \
 	--machine-type=e2-standard-2 \
-	--create-disk=auto-delete=yes,boot=yes,device-name=my-tezos-node,\
+	--create-disk=auto-delete=yes,boot=yes,device-name=${NAME},\
 image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,\
 mode=rw,size=80,\
-type=projects/my-tezos-project-chris/zones/europe-west6-a/diskTypes/pd-balanced \
+type=projects/${PROJECT}/zones/${ZONE}/diskTypes/pd-balanced \
 	--network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
 	--maintenance-policy=MIGRATE \
 	--provisioning-model=STANDARD \
@@ -146,18 +151,34 @@ type=projects/my-tezos-project-chris/zones/europe-west6-a/diskTypes/pd-balanced 
 	--no-shielded-secure-boot \
 	--shielded-vtpm \
 	--shielded-integrity-monitoring \
-	--labels=goog-ec-src=vm_add-gcloud \
 	--reservation-affinity=any \
-	--service-account=123456789123-compute@developer.gserviceaccount.com 
+	--labels=goog-ec-src=vm_add-gcloud \
+	--service-account=${SERVICEACCT}
 ```
 
-One can get the relevant command line by provisioning a VM on the Google Cloud Console and instead of creating it, viewing the equivalent code as in the image below.
+You can get more details by using the ```gcloud``` help functions, e.g. ```gcloud compute instances create --help```, but we briefly describe the options here.
+
+The *zone* and *machine-type* options are used to specify the zone and instance type we have chosen. The *create-disk* declaration specified the 80GB boot disk along with the initial image the machine will run. Note that the project name, instance name and zone are in the declaration, as is the Debian 11 image name.
+
+The *network-interface* option defines an IPv4 network interface in the default VPC of the GCP account. 
+
+The *maintenance-policy* is used when the underlying hardware is under maintainence. The *MIGRATE* policy means that GCP will attempt to migrate the instance. Alternatively one can use *TERMINATE* and the VM will be terminated instead.
+
+The *provisioning-model* is used to declare *STANDARD* or *SPOT* provisioning. Spot VMs are spare capacity and have lower pricing than standard VMs. Spot VMs have no guaranteed runtime which are suitable for applications that do not need to be available all the time. They are not suitable for our node application.
+
+The *scopes* option is used to declare the services that the VM can access. The help page lists all available scopes. 
+
+The next four options are more complicated and the interested reader can find out about them from the documentation. The *no-shielded-secure-boot* option disables secure boot, the *shielded-vtpm* option will ensure the VM is booted with the Trusted Platform Module enabled and the *shielded-integrity-monitoring* option enables monitoring of the boot integrity. The *reservation-affinity* option defines the type of reservation for the instance.
+
+The *labels* adds a key value pair label to the server to help find resources later on. This is optional, but in this case, the label can be used to find VMs that have been added using ```gcloud```. Finally the *service-account* option specifies the service account that the machine will run under.
+
+We obtained this command line by using the Compute Engine Console and instead of creating it, viewing the equivalent code as in the image below. The options above are the defaults it gave.
 
 ![Setting up the VM in the Console](img/VM.png)
 
 8\. We have written a post installation script *postinstall.sh* to do the rest. The script is available for [download from GitHub](https://github.com/drchrispinnock/gcp-node-example/blob/main/postinstall.sh) (you can find the download link next to the Raw button).
 
-The ```gcloud compute instances create``` commands allows you to specify metadata to help provision the machine. One of these items can be a script to run after the VM has booted the first time. The GCP system can sometimes thing that a virtual machine has not initiated correctly if a script runs for too long. When working on a similar project to this, I ran into trouble when the startup script took longer than 15 minutes and [others have had the same trouble too](https://stackoverflow.com/questions/38211164/is-there-a-time-limit-for-the-startup-script-to-finish-before-it-stops).
+XXX The ```gcloud compute instances create``` commands allows you to specify metadata to help provision the machine. One of these items can be a script to run after the VM has booted the first time. The GCP system can sometimes thing that a virtual machine has not initiated correctly if a script runs for too long. When working on a similar project to this, I ran into trouble when the startup script took longer than 15 minutes and [others have had the same trouble too](https://stackoverflow.com/questions/38211164/is-there-a-time-limit-for-the-startup-script-to-finish-before-it-stops). XXX
 
 The Tezos blockchain currently creates four blocks a minute[^3]. By contrast, the Bitcoin blockchain creates around four blocks an hour. At the time of writing, it is possible to start a Bitcoin node from cold and catch up to the present day in about 2 weeks. Although it is possible with Tezos on mainnet, it would take significantly longer given the number of blocks.
 
@@ -357,17 +378,25 @@ We conclude with some exercises.
 - provisions a VM using the service account
 - copies the postinstall script to the VM and then runs it
 
-Hint:
+Hints:
+
 - If your project is called *tezos-project* and you create a service account with short name *serviceacct*, the service account will be *serviceacct@tezos-project.iam.gserviceaccount.com*
 - You will need to consider the project name and service account name in the ```gcloud``` command - use variables.
 
-3. Modify the postinstall script so that the Tezos node runs on mainnet
+3. Modify the postinstall script so that the Tezos node runs on mainnet.
 
 4. Modify your script from 2 to setup 3 nodes - one in USA, one in Europe and one in Japan.
 
-5. Although we set up our original server to allow connections on 9732 for the Tezos Gossip network, the GCP firewall will prevent the connections. How do you add a rule to allow it?
-
 Hints:
+
 - Pick three zones from the GCP list
 - Use a for loop to iterate through the zones
 - Modify the instance name, zone and disk clause in the ```gcloud``` command by using the loop variable
+
+5. Although we set up our original server to allow connections on 9732 for the Tezos Gossip network, the GCP firewall will prevent the connections. How do you add a rule to allow it?
+
+
+
+# Acknowledgements
+
+Many thanks for Fabrice Truttman who read an early draft and made some suggestions. XXX

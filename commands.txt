@@ -40,8 +40,8 @@ type=projects/${PROJECT}/zones/${ZONE}/diskTypes/pd-balanced \
 	--no-shielded-secure-boot \
 	--shielded-vtpm \
 	--shielded-integrity-monitoring \
-	--labels=goog-ec-src=vm_add-gcloud \
 	--reservation-affinity=any \
+	--labels=goog-ec-src=vm_add-gcloud \
 	--service-account=${SERVICEACCT}
 
 gcloud compute scp --zone=${ZONE} postinstall.sh ${NAME}:/tmp
