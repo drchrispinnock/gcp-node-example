@@ -33,13 +33,13 @@ We install a [Tezos](https://www.tezos.com/) node on [Google Cloud Platform](htt
 
 As with most cloud services, it is possible to interact with GCP on the Unix or Windows command line. ```gcloud``` enables you to interactively provision services by typing commands and by extension allows you to write scripts to provision services very quickly.
 
-GCP has the advantage that for many of its services, the web front-end offers the the equivalent ```gcloud``` command line code for provisioning tasks. This makes it incredibly easy to write provisioning scripts for small projects. 
+GCP has the advantage that for many of its services, the web front-end offers the equivalent ```gcloud``` command line code for provisioning tasks. This makes it incredibly easy to write provisioning scripts for small projects. 
 
-In the GCP Console, there is a feature called Google Cloud Shell in which one can run ```gcloud```, but ```gcloud``` also runs natively on Linux, Macs and Windows.
+In the GCP Console, there is a feature called Google Cloud Shell in which one can run a Unix sheel and run ```gcloud```. However ```gcloud``` also runs natively on Linux, Macs and Windows machines.
 
 In this article we will install a Tezos node completely from the command line. We will use the Google Cloud Shell in the browser, but you can follow along with ```gcloud``` installed on your machine if you want. You will need a GCP billing account either with billing credits or a payment method defined.
 
-Do not forget to delete any unwanted resources that you create on GCP as you may incur unwanted charges.
+Please note that you may incur charges if you use the examples below. Do not forget to delete any unwanted resources that you create on GCP to avoid unexpected bills.
 
 For more details on Tezos, please refer to the [Tezos website](https://tezos.com). Please also refer to my [article on setting up a Tezos node](https://chrispinnock.com/tezos/node/).
 
@@ -47,13 +47,13 @@ For more details on Tezos, please refer to the [Tezos website](https://tezos.com
 
 We will install a Tezos node and participate in *nairobinet*. This is a test network designed to test the Nairobi protocol which will go live on June 23rd 2023. 
 
-A node keeps the full blockchain data or a subset of it depending on the history mode. There are three history modes for a node - *archive*, *full* and *rolling*. An archive node has all the blockchain data from the first block (Genesis block) to present day. A full node is able to  to provide most information about the chain but has some information summarised to save on space. A rolling node contains enough blocks so that the node can participate in the network. We will setup a rolling node because the disc space required is minimal.
+A node keeps the full blockchain data or a subset of it depending on the history mode. There are three history modes for a node - *archive*, *full* and *rolling*. An archive node has all the blockchain data from the first block (Genesis block) to the present day. A full node is able to provide most information about the chain but has some information summarised to save on space. A rolling node contains enough blocks so that the node can participate in the network. We will setup a rolling node because the disc space required is minimal.
 
 We will use the GCP Compute Engine to bring up a virtual machine with Debian 11 Linux. We will install [Octez](https://tezos.gitlab.io), the reference implementation of the Tezos protocol and we will install it using [binary packages](https://pkgbeta.tzinit.org) supplied by the Tezos Foundation.
 
 Alternatively, you could choose to participate in the production Tezos network *mainnet* but it will take longer to download and import the snapshot. 
 
-The resources for this article can be found at [GitHub](https://github.com/drchrispinnock/gcp-node-example).
+The resources for this article can be found at [GitHub](https://github.com/drchrispinnock/gcp-node-example). 
 
 ## Installation
 
@@ -98,7 +98,7 @@ gcloud beta billing projects link my-tezos-project-chris \
     --billing-account DEADBE-EDEAD-BEEF12
 ```
 
-5\. Services on GCP need to be enabled before they can be used. We want to run virtual machines so we need to enable Compute Engine:
+5\. Services on GCP need to be enabled before they can be used. We want to run virtual machines so we need to enable Compute Engine (note that this command can take some time to complete):
 
 ```
 gcloud services enable compute.googleapis.com 
@@ -148,7 +148,8 @@ gcloud compute instances create ${NAME} \
 image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,\
 mode=rw,size=80,\
 type=projects/${PROJECT}/zones/${ZONE}/diskTypes/pd-balanced \
-	--network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
+	--network-interface=network-tier=PREMIUM,\
+stack-type=IPV4_ONLY,subnet=default \
 	--maintenance-policy=MIGRATE \
 	--provisioning-model=STANDARD \
 	--scopes=https://www.googleapis.com/auth/cloud-platform \
