@@ -395,8 +395,6 @@ Hints:
 
 5. Although we set up our original server to allow connections on 9732 for the Tezos Gossip network, the GCP firewall will prevent the connections. How do you add a rule to allow it?
 
-
-
 # Acknowledgements
 
-Many thanks for Fabrice Truttman who read an early draft and made some suggestions. XXX
+Many thanks to Fabrice Trutmann who read an early draft and made some helpful suggestions.
