@@ -178,13 +178,13 @@ We obtained this command line by using the Compute Engine Console and instead of
 
 8\. We have written a post installation script *postinstall.sh* to do the rest. The script is available for [download from GitHub](https://github.com/drchrispinnock/gcp-node-example/blob/main/postinstall.sh) (you can find the download link next to the Raw button).
 
-XXX The ```gcloud compute instances create``` commands allows you to specify metadata to help provision the machine. One of these items can be a script to run after the VM has booted the first time. The GCP system can sometimes thing that a virtual machine has not initiated correctly if a script runs for too long. When working on a similar project to this, I ran into trouble when the startup script took longer than 15 minutes and [others have had the same trouble too](https://stackoverflow.com/questions/38211164/is-there-a-time-limit-for-the-startup-script-to-finish-before-it-stops). XXX
+The Tezos blockchain currently creates four blocks a minute[^3]. By contrast, the Bitcoin blockchain creates around four blocks an hour. At the time of writing, it is possible to start a Bitcoin node from cold and catch up to the present day in about 2 weeks. Although it is possible to do this with Tezos on mainnet, it would take significantly longer given the number of blocks to process.
 
-The Tezos blockchain currently creates four blocks a minute[^3]. By contrast, the Bitcoin blockchain creates around four blocks an hour. At the time of writing, it is possible to start a Bitcoin node from cold and catch up to the present day in about 2 weeks. Although it is possible with Tezos on mainnet, it would take significantly longer given the number of blocks.
+[^3]: Since the Mumbainet protocol. Previously, the chain had a longer block generation time.
 
-[^3:] Since the Mumbainet protocol. Previously, the chain had a longer block generation time.
+Fortunately Octez has the ability to export and import snapshots of the blockchain. Our post installation script downloads a recent snapshot of the blockchain and recovers the blockchain state from it. This can take in excess of 10 minutes particularly when recovering from a mainnet snapshot. 
 
-Fortunately Octez has the ability to export and import snapshots of the blockchain. Our post installation script downloads a recent snapshot of the blockchain and recovers the blockchain state from it. This can take in excess of 10 minutes particularly when recovering from a mainnet snapshot. As a result, we will run the post installation script via SSH.
+The ```gcloud compute instances create``` command has a metadata option to help provision the machine including a script to run after the VM has booted the first time. These scripts should ideally be short and to the point as they are part of the startup process. In certain circumstances, the GCP system will detect that a virtual machine has not initiated correctly if the startup process takes too long. As our snapshot download and recovery can take a long time, we will run the post installation script via SSH.
 
 First upload the post installation script to the Cloud Shell and then copy it to the VM. If you are running ```gcloud``` on your machine, you can just copy the file directly to the VM.
 
