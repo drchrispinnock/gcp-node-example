@@ -9,7 +9,7 @@ OS=deb11
 VER=17.1
 V=17.1-1
 
-URL=https://tz.fawlty.net/${OS}/${VER}
+URL=https://pkgbeta.tzinit.org/${OS}/${VER}
 ARCH=amd64
 OCTEZBASE=octez-${OS}-unoff
 

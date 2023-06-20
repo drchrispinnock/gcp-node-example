@@ -163,21 +163,21 @@ stack-type=IPV4_ONLY,subnet=default \
 
 You can get more details by using the ```gcloud``` help functions, e.g. ```gcloud compute instances create --help```, but we briefly describe the options here.
 
-The *zone* and *machine-type* options are used to specify the zone and instance type we have chosen. The *create-disk* declaration specified the 80GB boot disk along with the initial image the machine will run. Note that the project name, instance name and zone are in the declaration, as is the Debian 11 image name.
+The *zone* and *machine-type* options are used to specify the zone and instance type we have chosen. The *create-disk* declaration specifies the 80GB boot disk along with the initial image the machine will run. Note that the project name, instance name and zone are in the declaration, as is the Debian 11 image name.
 
 The *network-interface* option defines an IPv4 network interface in the default VPC of the GCP account. 
 
-The *maintenance-policy* is used when the underlying hardware is under maintenance. The *MIGRATE* policy means that GCP will attempt to migrate the instance. Alternatively one can use *TERMINATE* and the VM will be terminated instead.
+The *maintenance-policy* is used when the underlying hardware is under maintenance. The *MIGRATE* policy means that GCP will attempt to migrate the instance in such circumstances. Alternatively one can use *TERMINATE* and the VM will be terminated instead.
 
-The *provisioning-model* is used to declare *STANDARD* or *SPOT* provisioning. Spot VMs are spare capacity and have lower pricing than standard VMs. Spot VMs have no guaranteed run-time which are suitable for applications that do not need to be available all the time. They are not suitable for our node application.
+The *provisioning-model* is used to declare *STANDARD* or *SPOT* provisioning. Spot VMs are spare capacity and have lower pricing than standard VMs. Spot VMs have no guaranteed run-time and are suitable for applications that do not need to be available all the time. They are not suitable for our node application.
 
 The *scopes* option is used to declare the services that the VM can access. The help page lists all available scopes. 
 
 The next four options are more complicated and the interested reader can find out about them from the documentation. The *no-shielded-secure-boot* option disables secure boot, the *shielded-vtpm* option will ensure the VM is booted with the Trusted Platform Module enabled and the *shielded-integrity-monitoring* option enables monitoring of the boot integrity. The *reservation-affinity* option defines the type of reservation for the instance.
 
-The *labels* adds a key value pair label to the server to help find resources later on. This is optional, but in this case, the label can be used to find VMs that have been added using ```gcloud```. Finally the *service-account* option specifies the service account that the machine will run under.
+The *labels* option adds a key value pair label to the server to help find resources later on. This is optional, but in this case, the label can be used to find VMs that have been added using ```gcloud```. Finally the *service-account* option specifies the service account that the machine will run under.
 
-We obtained this command line by using the Compute Engine Console and instead of creating it, viewing the equivalent code as in the image below. The options above are the defaults it gave.
+We obtained this command line by using the Compute Engine Console and instead of creating it, we viewed the equivalent code as in the image below. 
 
 ![Setting up the VM in the Console](img/VM.png)
 
@@ -189,7 +189,7 @@ The Tezos blockchain currently creates four blocks a minute[^3]. By contrast, th
 
 Fortunately Octez has the ability to export and import snapshots of the blockchain. Our post installation script downloads a recent snapshot of the blockchain and recovers the blockchain state from it. This can take in excess of 10 minutes particularly when recovering from a *mainnet* snapshot. 
 
-The ```gcloud compute instances create``` command has a metadata option to help provision the machine including a script to run after the VM has booted the first time. These scripts should ideally be short and to the point as they are part of the startup process. In certain circumstances, the GCP system will detect that a virtual machine has not initiated correctly if the startup process takes too long. As our snapshot download and recovery can take a long time, we will run the post installation script via SSH.
+The ```gcloud compute instances create``` command has a metadata option to help provision the machine including a script to run after the VM has booted the first time. These scripts should ideally be short and to the point as they are part of the startup process. In certain circumstances if the startup process takes too long, the GCP system will detect that a virtual machine has not initiated correctly. As our snapshot download and recovery can take a long time, we will run the post installation script via SSH.
 
 First upload the post installation script to the Cloud Shell and then copy it to the VM. If you are running ```gcloud``` on your machine, you can just copy the file directly to the VM.
 
@@ -235,7 +235,7 @@ OS=deb11
 VER=17.1
 V=17.1-1
 
-URL=https://tz.fawlty.net/${OS}/${VER}
+URL=https://pkgbeta.tzinit.org/${OS}/${VER}
 ARCH=amd64
 OCTEZBASE=octez-${OS}-unoff
 
@@ -287,9 +287,9 @@ done
 
 Once the packages have downloaded, the script sets up a basic configuration for Octez using the network URL and the history mode. The network URL is a resource that provides information about the network including servers to obtain initial blocks from. 
 
-We allow local remote procedure calls (RPC) on port 8732. This allows us to query the node locally. We also listen publicly on port 9732. This will allow other nodes to connect to ours (but please see the Exercises below). This connections and activity happen on the so-called Tezos Gossip network.
+We allow local remote procedure calls (RPC) on port 8732. This allows us to query the node locally. We also listen publicly on port 9732. This will allow other nodes to connect to ours (but please see the Exercises below). These connections and activity happen on the so-called Tezos Gossip network.
 
-The packages we have used run the Octez software under a dedicated user called *tezos*. Therefore we must set up the node by running the commands under the *tezos* user. We do this with ```su```.
+The packages run the Octez software under a dedicated user called *tezos*. Therefore we must set up the node by running the commands under the *tezos* user. We do this with ```su```.
 
 ```
 # Basic Configuration on the Octez node using network, history
@@ -370,7 +370,7 @@ Of course, for bigger projects one should use an Infrastructure as Code tool suc
 
 We conclude with some exercises.
 
-# Exercises
+## Exercises
 
 1. Find out how to stop a VM in GCP using ```gcloud```.
 
@@ -399,6 +399,8 @@ Hints:
 - Modify the instance name, zone and disk clause in the ```gcloud``` command by using the loop variable
 
 5. Although we set up our original server to allow connections on 9732 for the Tezos Gossip network, the GCP firewall will prevent the connections. How do you add a rule to allow it?
+
+(The answers are available at the [Github site](https://github.com/drchrispinnock/gcp-node-example/blob/main/answers-to-exercises.md) for the paper.)
 
 ## Acknowledgements
 
