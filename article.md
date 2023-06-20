@@ -18,9 +18,9 @@ categories:
 tags:
 - Tezos
 meta:
-permalink: "/tezos/gcpnode/"
+permalink: "/tezos/gcloud/"
 redirect_from:
-- /2023/06/20/tezosgcpnode/
+- /2023/06/20/tezosgcloud/
 ---
 
 ## Abstract
