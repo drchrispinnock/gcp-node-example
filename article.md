@@ -23,7 +23,11 @@ redirect_from:
 - /2023/06/20/tezosgcpnode/
 ---
 
-# Introduction
+## Abstract
+
+We install a [Tezos](https://www.tezos.com/) node on [Google Cloud Platform](https://cloud.google.com/) using the ```gcloud``` command.
+
+## Introduction
 
 [Tezos](https://tezos.com) is a proof-of-stake blockchain. Anyone can run a Tezos node to participate in the network and contribute to the integrity and resilience of the network. Recently I needed to bring up some Tezos nodes quickly on the [Google Cloud Platform (GCP)](https://cloud.google.com/). There are many ways to install Tezos on GCP. One can use docker images, software packages or build from source. To provision the virtual machines on GCP, one can use tools like [Terraform](https://www.terraform.io/) or [Pulumi](https://www.pulumi.com). On this occasion I wanted to get some hands-on experience with the GCP command line tool, ```gcloud```. 
 
@@ -39,7 +43,7 @@ Do not forget to delete any unwanted resources that you create on GCP as you may
 
 For more details on Tezos, please refer to the [Tezos website](https://tezos.com). Please also refer to my [article on setting up a Tezos node](https://chrispinnock.com/tezos/node/).
 
-# Outline
+## Outline
 
 We will install a Tezos node and participate in *nairobinet*. This is a test network designed to test the Nairobi protocol which will go live on June 23rd 2023. 
 
@@ -51,7 +55,7 @@ Alternatively, you could choose to participate in the production Tezos network *
 
 The resources for this article can be found at [GitHub](https://github.com/drchrispinnock/gcp-node-example).
 
-# Installation
+## Installation
 
 1\. Login to the [Google Cloud Platform Console](https://console.cloud.google.com/) with your Google account. If this is your first login, you will need to activate the account and set up a billing method[^2].
 
@@ -355,7 +359,7 @@ Current head: BLGkdx644FPs (timestamp: 2023-05-27T18:07:10.000-00:00, validation
 Node is bootstrapped.
 ```
 
-# Conclusion
+## Conclusion
 
 Although this article is about Tezos nodes, it was really written as an excuse for me to play with ```gcloud```. As we have seen, it is easy to quickly provision VMs with software on GCP using ```gcloud``` and with a bit of Unix knowledge. Although I'm relatively new to GCP, I have been able to tackle far larger projects using ```gcloud``` in a relatively short space of time.
 
@@ -395,6 +399,6 @@ Hints:
 
 5. Although we set up our original server to allow connections on 9732 for the Tezos Gossip network, the GCP firewall will prevent the connections. How do you add a rule to allow it?
 
-# Acknowledgements
+## Acknowledgements
 
 Many thanks to Fabrice Trutmann who read an early draft and made some helpful suggestions.
