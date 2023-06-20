@@ -162,9 +162,9 @@ The *zone* and *machine-type* options are used to specify the zone and instance 
 
 The *network-interface* option defines an IPv4 network interface in the default VPC of the GCP account. 
 
-The *maintenance-policy* is used when the underlying hardware is under maintainence. The *MIGRATE* policy means that GCP will attempt to migrate the instance. Alternatively one can use *TERMINATE* and the VM will be terminated instead.
+The *maintenance-policy* is used when the underlying hardware is under maintenance. The *MIGRATE* policy means that GCP will attempt to migrate the instance. Alternatively one can use *TERMINATE* and the VM will be terminated instead.
 
-The *provisioning-model* is used to declare *STANDARD* or *SPOT* provisioning. Spot VMs are spare capacity and have lower pricing than standard VMs. Spot VMs have no guaranteed runtime which are suitable for applications that do not need to be available all the time. They are not suitable for our node application.
+The *provisioning-model* is used to declare *STANDARD* or *SPOT* provisioning. Spot VMs are spare capacity and have lower pricing than standard VMs. Spot VMs have no guaranteed run-time which are suitable for applications that do not need to be available all the time. They are not suitable for our node application.
 
 The *scopes* option is used to declare the services that the VM can access. The help page lists all available scopes. 
 
