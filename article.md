@@ -1,5 +1,5 @@
 ---
-title: "Setting up a Tezos node on GCP"
+title: "Setting up a Tezos node with gcloud"
 date: 2023-06-20
 titlepage: false
 toc-own-page: true
