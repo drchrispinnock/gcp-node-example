@@ -10,7 +10,8 @@ clean:
 
 %.pdf:	%.md
 	@echo "=> Building $@"
-	@pandoc --pdf-engine=${PDFENGINE} --from markdown+pipe_tables --template templates/eisvogel-cp.tex -N --toc --output=$@ --listings --no-highlight -f markdown+implicit_figures $<
+#	@pandoc --pdf-engine=${PDFENGINE} --from markdown+pipe_tables --template templates/eisvogel-cp.tex -N --toc --output=$@ --listings --no-highlight -f markdown+implicit_figures $<
+	@pandoc --from markdown+pipe_tables --template templates/eisvogel-cp.tex -N --toc --output=$@ --listings --no-highlight -f markdown+implicit_figures $<
 
 
 

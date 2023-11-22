@@ -231,19 +231,18 @@ Of course, if you want to run a node on a different network you can change the s
 # Ming Vase license - if it breaks, you get to keep the pieces. 
 # No warranty whatsoever.
 
-OS=deb11
-VER=17.1
-V=17.1-1
+OS=debian-11
+VER=18.1
+V=18.1-1
 
-URL=https://pkgbeta.tzinit.org/${OS}/${VER}
+URL=https://pkgbeta.tzinit.org/${OS}
 ARCH=amd64
-OCTEZBASE=octez-${OS}-unoff
+OCTEZBASE=octez
 
 # Network - various options
 #
 #NET=mainnet
 #NET=ghostnet
-#NET=mumbainet
 NET=nairobinet
 
 # Mode & snapshot URL
@@ -251,11 +250,6 @@ NET=nairobinet
 MODE=rolling
 
 SNAPSHOT_URL=https://snapshots.eu.tzinit.org/${NET}/${MODE}
-
-# Other services include Marigold
-#SNAPSHOT_URL="https://snapshots.tezos.marigold.dev/api/${NET}/${MODE}
-# and Xtz-shots - only rolling available
-#SNAPSHOT_URL=https://${NET}.xtz-shots.io/${MODE}
 
 NETWORKURL=${NET}
 if [ "$NET" != "mainnet" ] && [ "$NET" != "ghostnet" ]; then
